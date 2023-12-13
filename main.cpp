@@ -1,21 +1,23 @@
 //AES加密文本之CBC模式
 //openssl版本：3.0系列 ，win 32
-
 #include <iostream>
 #include<openssl/evp.h>
+#include<openssl\rand.h>
 using namespace std;
 int main()
 {
 	EVP_CIPHER_CTX* ctx;
 	int ciphertext_len; 
 	int len;
-	unsigned char key[] = "d2cR4OQQU1+9jxHJD4Mj5lae4a1/IzK2";
-	unsigned char iv[] = "0123456789abcdef";
+	unsigned char key[32];
+	RAND_bytes(key, 32);
+	unsigned char iv[16];
+	RAND_bytes(iv,16);
 	unsigned char plaintext[] = "hellweqweol";//需要加密的文本
 	unsigned char ciphertext[512];//加密后的文本
 	if (!(ctx = EVP_CIPHER_CTX_new()))//创建一个加解密上下文
 	{
-		EVP_CIPHER_CTX_free(ctx);//释放加解密上下文
+		EVP_CIPHER_CTX_free(ctx);
 		return -1;
 	}
 	if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))//初始化加密
@@ -59,4 +61,3 @@ int main()
 	EVP_CIPHER_CTX_free(ctx);
 	return 0;
 }
-  
